@@ -13,14 +13,11 @@ function App() {
   const [user, setUser] = useState(null);
   const [showAuth, setShowAuth] = useState('login'); // 'login' or 'register'
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState({ groq: false, gemini: false, cohere: false, claude: false, gpt4: false, mistral: false });
+  const [loading, setLoading] = useState({ groq: false, gemini: false, cohere: false });
   const [conversations, setConversations] = useState({
     groq: [{ role: 'assistant', content: 'Hello! I\'m Groq (Llama 3.1). Send a message to all chatbots!', timestamp: new Date().toISOString() }],
     gemini: [{ role: 'assistant', content: 'Hello! I\'m Gemini 2.5 Flash. Ready to chat!', timestamp: new Date().toISOString() }],
-    cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }],
-    claude: [{ role: 'assistant', content: 'Hello! I\'m Claude 3.5 Sonnet. Ready to assist!', timestamp: new Date().toISOString() }],
-    gpt4: [{ role: 'assistant', content: 'Hello! I\'m GPT-4. How can I help you today?', timestamp: new Date().toISOString() }],
-    mistral: [{ role: 'assistant', content: 'Hello! I\'m Mistral AI. Let\'s chat!', timestamp: new Date().toISOString() }]
+    cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }]
   });
   const [summaryModal, setSummaryModal] = useState({ isOpen: false, summary: '', loading: false });
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -29,19 +26,13 @@ function App() {
   const messagesEndRefs = {
     groq: useRef(null),
     gemini: useRef(null),
-    cohere: useRef(null),
-    claude: useRef(null),
-    gpt4: useRef(null),
-    mistral: useRef(null)
+    cohere: useRef(null)
   };
 
   const bots = [
     { id: 'groq', name: 'Groq (Llama 3.1)', color: '#6366f1', icon: '⚡' },
     { id: 'gemini', name: 'Gemini 2.5 Flash', color: '#f59e0b', icon: '✨' },
-    { id: 'cohere', name: 'Cohere (Command R)', color: '#10b981', icon: '🚀' },
-    { id: 'claude', name: 'Claude 3.5 Sonnet', color: '#9333ea', icon: '🧠' },
-    { id: 'gpt4', name: 'GPT-4', color: '#06b6d4', icon: '🤖' },
-    { id: 'mistral', name: 'Mistral AI', color: '#f43f5e', icon: '⭐' }
+    { id: 'cohere', name: 'Cohere (Command R)', color: '#10b981', icon: '🚀' }
   ];
 
   // Check for existing auth on mount
@@ -82,10 +73,7 @@ function App() {
     setConversations({
       groq: [{ role: 'assistant', content: 'Hello! I\'m Groq (Llama 3.1). Send a message to all chatbots!', timestamp: new Date().toISOString() }],
       gemini: [{ role: 'assistant', content: 'Hello! I\'m Gemini 2.5 Flash. Ready to chat!', timestamp: new Date().toISOString() }],
-      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }],
-      claude: [{ role: 'assistant', content: 'Hello! I\'m Claude 3.5 Sonnet. Ready to assist!', timestamp: new Date().toISOString() }],
-      gpt4: [{ role: 'assistant', content: 'Hello! I\'m GPT-4. How can I help you today?', timestamp: new Date().toISOString() }],
-      mistral: [{ role: 'assistant', content: 'Hello! I\'m Mistral AI. Let\'s chat!', timestamp: new Date().toISOString() }]
+      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }]
     });
   };
 
@@ -167,10 +155,7 @@ function App() {
     setConversations({
       groq: [{ role: 'assistant', content: 'Hello! I\'m Groq (Llama 3.1). Send a message to all chatbots!', timestamp: new Date().toISOString() }],
       gemini: [{ role: 'assistant', content: 'Hello! I\'m Gemini 2.5 Flash. Ready to chat!', timestamp: new Date().toISOString() }],
-      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }],
-      claude: [{ role: 'assistant', content: 'Hello! I\'m Claude 3.5 Sonnet. Ready to assist!', timestamp: new Date().toISOString() }],
-      gpt4: [{ role: 'assistant', content: 'Hello! I\'m GPT-4. How can I help you today?', timestamp: new Date().toISOString() }],
-      mistral: [{ role: 'assistant', content: 'Hello! I\'m Mistral AI. Let\'s chat!', timestamp: new Date().toISOString() }]
+      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }]
     });
   };
 

@@ -1,6 +1,7 @@
 /* Dark Mode Styles */
 
-.dark-mode {
+/* Dark mode CSS variables - applied when html has dark-mode class */
+html.dark-mode {
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
   --text-primary: #f1f5f9;
@@ -12,127 +13,131 @@
   --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
 }
 
-.dark-mode body {
+html.dark-mode body {
   background: var(--bg-primary);
   color: var(--text-primary);
 }
 
-.dark-mode .app-header {
+html.dark-mode .App {
+  background: var(--bg-primary);
+}
+
+html.dark-mode .app-header {
   background: var(--bg-secondary);
   border-bottom-color: var(--border-color);
 }
 
-.dark-mode .chatbot-column {
+html.dark-mode .chatbot-column {
   background: var(--bg-secondary);
   border-color: var(--border-color);
 }
 
-.dark-mode .messages-container {
+html.dark-mode .messages-container {
   background: var(--bg-primary);
 }
 
-.dark-mode .message.assistant .message-content {
+html.dark-mode .message.assistant .message-content {
   background: var(--bg-secondary);
   border-color: var(--border-color);
   color: var(--text-primary);
 }
 
-.dark-mode .message-content code {
+html.dark-mode .message-content code {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.dark-mode .shared-input-container {
+html.dark-mode .shared-input-container {
   background: var(--bg-secondary);
   border-top-color: var(--border-color);
 }
 
-.dark-mode .shared-input-container textarea {
+html.dark-mode .shared-input-container textarea {
   background: var(--bg-primary);
   color: var(--text-primary);
   border-color: var(--border-color);
 }
 
-.dark-mode .user-dropdown {
+html.dark-mode .user-dropdown {
   background: var(--bg-secondary);
   border-color: var(--border-color);
 }
 
-.dark-mode .user-info {
+html.dark-mode .user-info {
   border-bottom-color: var(--border-color);
 }
 
-.dark-mode .logout-button:hover {
+html.dark-mode .logout-button:hover {
   background: rgba(239, 68, 68, 0.1);
 }
 
-.dark-mode .summary-button,
-.dark-mode .clear-button {
+html.dark-mode .summary-button,
+html.dark-mode .clear-button {
   background: var(--bg-secondary);
   border-color: var(--border-color);
   color: var(--text-primary);
 }
 
-.dark-mode .summary-button {
+html.dark-mode .summary-button {
   background: var(--primary-gradient);
   color: white;
   border-color: transparent;
 }
 
-.dark-mode .summary-button:hover,
-.dark-mode .clear-button:hover {
+html.dark-mode .summary-button:hover,
+html.dark-mode .clear-button:hover {
   background: var(--bg-primary);
 }
 
 /* Dark mode for modals */
-.dark-mode .modal-content {
+html.dark-mode .modal-content {
   background: var(--bg-secondary);
   color: var(--text-primary);
 }
 
-.dark-mode .modal-header {
+html.dark-mode .modal-header {
   background: var(--primary-gradient);
   border-bottom-color: var(--border-color);
 }
 
-.dark-mode .modal-body {
+html.dark-mode .modal-body {
   background: var(--bg-secondary);
 }
 
-.dark-mode .modal-footer {
+html.dark-mode .modal-footer {
   border-top-color: var(--border-color);
 }
 
-.dark-mode .summary-content h1,
-.dark-mode .summary-content h2,
-.dark-mode .summary-content h3 {
+html.dark-mode .summary-content h1,
+html.dark-mode .summary-content h2,
+html.dark-mode .summary-content h3 {
   color: var(--text-primary);
 }
 
-.dark-mode .summary-content {
+html.dark-mode .summary-content {
   color: var(--text-primary);
 }
 
-.dark-mode .summary-content code {
+html.dark-mode .summary-content code {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.dark-mode .summary-content pre {
+html.dark-mode .summary-content pre {
   background: #0f172a;
 }
 
 /* Scrollbar dark mode */
-.dark-mode .messages-container::-webkit-scrollbar-track,
-.dark-mode .modal-body::-webkit-scrollbar-track {
+html.dark-mode .messages-container::-webkit-scrollbar-track,
+html.dark-mode .modal-body::-webkit-scrollbar-track {
   background: var(--bg-primary);
 }
 
-.dark-mode .messages-container::-webkit-scrollbar-thumb,
-.dark-mode .modal-body::-webkit-scrollbar-thumb {
+html.dark-mode .messages-container::-webkit-scrollbar-thumb,
+html.dark-mode .modal-body::-webkit-scrollbar-thumb {
   background: var(--border-color);
 }
 
-.dark-mode .messages-container::-webkit-scrollbar-thumb:hover,
-.dark-mode .modal-body::-webkit-scrollbar-thumb:hover {
+html.dark-mode .messages-container::-webkit-scrollbar-thumb:hover,
+html.dark-mode .modal-body::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }
 
@@ -207,11 +212,21 @@
   background: var(--bg-primary);
 }
 
-.dark-mode .export-dropdown {
+html.dark-mode .export-dropdown {
   background: var(--bg-secondary);
   border-color: var(--border-color);
 }
 
-.dark-mode .export-option:hover {
+html.dark-mode .export-option:hover {
+  background: var(--bg-primary);
+}
+
+html.dark-mode .theme-toggle {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+html.dark-mode .theme-toggle:hover {
   background: var(--bg-primary);
 }

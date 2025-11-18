@@ -4,9 +4,6 @@ import {
   chatWithGemini,
   chatWithCohere,
   chatWithGroqMixtral,
-  chatWithClaude,
-  chatWithGPT4,
-  chatWithMistral,
   generateSummary
 } from '../services/chatbotService.js';
 
@@ -76,72 +73,6 @@ router.post('/cohere', async (req, res) => {
   } catch (error) {
     console.error('Cohere error:', error);
     res.status(500).json({ error: error.message || 'Error with Cohere chatbot' });
-  }
-});
-
-// Claude Chatbot Endpoint
-router.post('/claude', async (req, res) => {
-  try {
-    const { message, conversationHistory = [] } = req.body;
-
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
-    }
-
-    const response = await chatWithClaude(message, conversationHistory);
-    res.json({
-      bot: 'claude',
-      model: 'Claude 3.5 Sonnet',
-      response,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('Claude error:', error);
-    res.status(500).json({ error: error.message || 'Error with Claude chatbot' });
-  }
-});
-
-// GPT-4 Chatbot Endpoint
-router.post('/gpt4', async (req, res) => {
-  try {
-    const { message, conversationHistory = [] } = req.body;
-
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
-    }
-
-    const response = await chatWithGPT4(message, conversationHistory);
-    res.json({
-      bot: 'gpt4',
-      model: 'GPT-4',
-      response,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('GPT-4 error:', error);
-    res.status(500).json({ error: error.message || 'Error with GPT-4 chatbot' });
-  }
-});
-
-// Mistral Chatbot Endpoint
-router.post('/mistral', async (req, res) => {
-  try {
-    const { message, conversationHistory = [] } = req.body;
-
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
-    }
-
-    const response = await chatWithMistral(message, conversationHistory);
-    res.json({
-      bot: 'mistral',
-      model: 'Mistral Small',
-      response,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('Mistral error:', error);
-    res.status(500).json({ error: error.message || 'Error with Mistral chatbot' });
   }
 });
 

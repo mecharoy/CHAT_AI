@@ -32,11 +32,11 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     message: 'AI Chatbot Server is running',
-    chatbots: ['groq', 'gemini', 'cohere', 'claude', 'gpt4', 'mistral']
+    chatbots: ['groq', 'gemini', 'cohere']
   });
 });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Available chatbots: Groq, Gemini, Cohere, Claude, GPT-4, Mistral`);
+  console.log(`Available chatbots: Groq (Llama 3.1), Gemini (Mixtral 8x7B), Cohere (Command R)`);
 });
