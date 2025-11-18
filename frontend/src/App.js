@@ -4,31 +4,44 @@ import ReactMarkdown from 'react-markdown';
 import Login from './components/Login';
 import Register from './components/Register';
 import SummaryModal from './components/SummaryModal';
+import { useTheme } from './contexts/ThemeContext';
+import { exportToJSON, exportToMarkdown, exportToText } from './utils/exportUtils';
 import './App.css';
 
 function App() {
+  const { darkMode, toggleDarkMode } = useTheme();
   const [user, setUser] = useState(null);
   const [showAuth, setShowAuth] = useState('login'); // 'login' or 'register'
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState({ groq: false, gemini: false, cohere: false });
+  const [loading, setLoading] = useState({ groq: false, gemini: false, cohere: false, claude: false, gpt4: false, mistral: false });
   const [conversations, setConversations] = useState({
     groq: [{ role: 'assistant', content: 'Hello! I\'m Groq (Llama 3.1). Send a message to all chatbots!', timestamp: new Date().toISOString() }],
     gemini: [{ role: 'assistant', content: 'Hello! I\'m Gemini 2.5 Flash. Ready to chat!', timestamp: new Date().toISOString() }],
-    cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }]
+    cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }],
+    claude: [{ role: 'assistant', content: 'Hello! I\'m Claude 3.5 Sonnet. Ready to assist!', timestamp: new Date().toISOString() }],
+    gpt4: [{ role: 'assistant', content: 'Hello! I\'m GPT-4. How can I help you today?', timestamp: new Date().toISOString() }],
+    mistral: [{ role: 'assistant', content: 'Hello! I\'m Mistral AI. Let\'s chat!', timestamp: new Date().toISOString() }]
   });
   const [summaryModal, setSummaryModal] = useState({ isOpen: false, summary: '', loading: false });
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   const messagesEndRefs = {
     groq: useRef(null),
     gemini: useRef(null),
-    cohere: useRef(null)
+    cohere: useRef(null),
+    claude: useRef(null),
+    gpt4: useRef(null),
+    mistral: useRef(null)
   };
 
   const bots = [
     { id: 'groq', name: 'Groq (Llama 3.1)', color: '#6366f1', icon: '⚡' },
     { id: 'gemini', name: 'Gemini 2.5 Flash', color: '#f59e0b', icon: '✨' },
-    { id: 'cohere', name: 'Cohere (Command R)', color: '#10b981', icon: '🚀' }
+    { id: 'cohere', name: 'Cohere (Command R)', color: '#10b981', icon: '🚀' },
+    { id: 'claude', name: 'Claude 3.5 Sonnet', color: '#9333ea', icon: '🧠' },
+    { id: 'gpt4', name: 'GPT-4', color: '#06b6d4', icon: '🤖' },
+    { id: 'mistral', name: 'Mistral AI', color: '#f43f5e', icon: '⭐' }
   ];
 
   // Check for existing auth on mount
@@ -69,7 +82,10 @@ function App() {
     setConversations({
       groq: [{ role: 'assistant', content: 'Hello! I\'m Groq (Llama 3.1). Send a message to all chatbots!', timestamp: new Date().toISOString() }],
       gemini: [{ role: 'assistant', content: 'Hello! I\'m Gemini 2.5 Flash. Ready to chat!', timestamp: new Date().toISOString() }],
-      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }]
+      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }],
+      claude: [{ role: 'assistant', content: 'Hello! I\'m Claude 3.5 Sonnet. Ready to assist!', timestamp: new Date().toISOString() }],
+      gpt4: [{ role: 'assistant', content: 'Hello! I\'m GPT-4. How can I help you today?', timestamp: new Date().toISOString() }],
+      mistral: [{ role: 'assistant', content: 'Hello! I\'m Mistral AI. Let\'s chat!', timestamp: new Date().toISOString() }]
     });
   };
 
@@ -151,7 +167,10 @@ function App() {
     setConversations({
       groq: [{ role: 'assistant', content: 'Hello! I\'m Groq (Llama 3.1). Send a message to all chatbots!', timestamp: new Date().toISOString() }],
       gemini: [{ role: 'assistant', content: 'Hello! I\'m Gemini 2.5 Flash. Ready to chat!', timestamp: new Date().toISOString() }],
-      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }]
+      cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }],
+      claude: [{ role: 'assistant', content: 'Hello! I\'m Claude 3.5 Sonnet. Ready to assist!', timestamp: new Date().toISOString() }],
+      gpt4: [{ role: 'assistant', content: 'Hello! I\'m GPT-4. How can I help you today?', timestamp: new Date().toISOString() }],
+      mistral: [{ role: 'assistant', content: 'Hello! I\'m Mistral AI. Let\'s chat!', timestamp: new Date().toISOString() }]
     });
   };
 
@@ -239,6 +258,53 @@ function App() {
                 <path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86732 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               Clear
+            </button>
+
+            <div className="export-menu">
+              <button className="clear-button" onClick={() => setShowExportMenu(!showExportMenu)}>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Export
+              </button>
+              {showExportMenu && (
+                <div className="export-dropdown">
+                  <button className="export-option" onClick={() => { exportToJSON(conversations, 'AI-Conversations'); setShowExportMenu(false); }}>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Export as JSON
+                  </button>
+                  <button className="export-option" onClick={() => { exportToMarkdown(conversations, 'AI Conversations'); setShowExportMenu(false); }}>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Export as Markdown
+                  </button>
+                  <button className="export-option" onClick={() => { exportToText(conversations, 'AI Conversations'); setShowExportMenu(false); }}>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Export as Text
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <button className="theme-toggle" onClick={toggleDarkMode}>
+              {darkMode ? (
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5M17.6859 17.69L18.5 18.5M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+              {darkMode ? 'Light' : 'Dark'}
             </button>
 
             <div className="user-menu">

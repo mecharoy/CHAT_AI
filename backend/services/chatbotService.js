@@ -1,6 +1,8 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from "@google/genai";
+import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
 dotenv.config();
 
@@ -261,6 +263,120 @@ Please provide a well-structured summary with clear sections.`;
   } catch (error) {
     console.error('Summary Generation Error:', error.response?.data || error.message);
     throw new Error('Failed to generate summary');
+  }
+}
+
+// Claude (Anthropic) Chatbot
+export async function chatWithClaude(message, conversationHistory = []) {
+  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+
+  if (!ANTHROPIC_API_KEY) {
+    throw new Error('ANTHROPIC_API_KEY is not configured');
+  }
+
+  try {
+    const anthropic = new Anthropic({
+      apiKey: ANTHROPIC_API_KEY
+    });
+
+    // Build conversation messages
+    const messages = [
+      ...conversationHistory.map(msg => ({
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        content: msg.content
+      })),
+      { role: 'user', content: message }
+    ];
+
+    const response = await anthropic.messages.create({
+      model: 'claude-3-5-sonnet-20241022',
+      max_tokens: 1024,
+      messages: messages
+    });
+
+    return response.content[0].text;
+  } catch (error) {
+    console.error('Claude API Error:', error.message);
+    throw new Error('Failed to get response from Claude');
+  }
+}
+
+// GPT-4 (OpenAI) Chatbot
+export async function chatWithGPT4(message, conversationHistory = []) {
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+  if (!OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is not configured');
+  }
+
+  try {
+    const openai = new OpenAI({
+      apiKey: OPENAI_API_KEY
+    });
+
+    // Build conversation messages
+    const messages = [
+      { role: 'system', content: 'You are a helpful AI assistant powered by GPT-4.' },
+      ...conversationHistory.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      })),
+      { role: 'user', content: message }
+    ];
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: messages,
+      temperature: 0.7,
+      max_tokens: 1024
+    });
+
+    return response.choices[0].message.content;
+  } catch (error) {
+    console.error('GPT-4 API Error:', error.message);
+    throw new Error('Failed to get response from GPT-4');
+  }
+}
+
+// Mistral AI Chatbot
+export async function chatWithMistral(message, conversationHistory = []) {
+  const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY;
+
+  if (!MISTRAL_API_KEY) {
+    throw new Error('MISTRAL_API_KEY is not configured');
+  }
+
+  try {
+    // Build conversation messages
+    const messages = [
+      { role: 'system', content: 'You are a helpful AI assistant powered by Mistral.' },
+      ...conversationHistory.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      })),
+      { role: 'user', content: message }
+    ];
+
+    const response = await axios.post(
+      'https://api.mistral.ai/v1/chat/completions',
+      {
+        model: 'mistral-small-latest',
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 1024
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${MISTRAL_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error('Mistral API Error:', error.response?.data || error.message);
+    throw new Error('Failed to get response from Mistral');
   }
 }
 
