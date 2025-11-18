@@ -1,5 +1,5 @@
 import express from 'express';
-import { chatWithGroq, chatWithGemini, chatWithCohere, chatWithGroqMixtral } from '../services/chatbotService.js';
+import { chatWithGroq, chatWithGemini, chatWithCohere, chatWithGroqMixtral, generateSummary } from '../services/chatbotService.js';
 
 const router = express.Router();
 
@@ -67,6 +67,26 @@ router.post('/cohere', async (req, res) => {
   } catch (error) {
     console.error('Cohere error:', error);
     res.status(500).json({ error: error.message || 'Error with Cohere chatbot' });
+  }
+});
+
+// Summary Endpoint - Generate summary of all conversations
+router.post('/summary', async (req, res) => {
+  try {
+    const { conversations } = req.body;
+
+    if (!conversations) {
+      return res.status(400).json({ error: 'Conversations are required' });
+    }
+
+    const summary = await generateSummary(conversations);
+    res.json({
+      summary,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Summary generation error:', error);
+    res.status(500).json({ error: error.message || 'Error generating summary' });
   }
 });
 
