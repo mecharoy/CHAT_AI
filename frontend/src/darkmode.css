@@ -1,0 +1,217 @@
+/* Dark Mode Styles */
+
+.dark-mode {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.dark-mode body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.dark-mode .app-header {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+.dark-mode .chatbot-column {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-mode .messages-container {
+  background: var(--bg-primary);
+}
+
+.dark-mode .message.assistant .message-content {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .message-content code {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .shared-input-container {
+  background: var(--bg-secondary);
+  border-top-color: var(--border-color);
+}
+
+.dark-mode .shared-input-container textarea {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.dark-mode .user-dropdown {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-mode .user-info {
+  border-bottom-color: var(--border-color);
+}
+
+.dark-mode .logout-button:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.dark-mode .summary-button,
+.dark-mode .clear-button {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .summary-button {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: transparent;
+}
+
+.dark-mode .summary-button:hover,
+.dark-mode .clear-button:hover {
+  background: var(--bg-primary);
+}
+
+/* Dark mode for modals */
+.dark-mode .modal-content {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.dark-mode .modal-header {
+  background: var(--primary-gradient);
+  border-bottom-color: var(--border-color);
+}
+
+.dark-mode .modal-body {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .modal-footer {
+  border-top-color: var(--border-color);
+}
+
+.dark-mode .summary-content h1,
+.dark-mode .summary-content h2,
+.dark-mode .summary-content h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .summary-content {
+  color: var(--text-primary);
+}
+
+.dark-mode .summary-content code {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .summary-content pre {
+  background: #0f172a;
+}
+
+/* Scrollbar dark mode */
+.dark-mode .messages-container::-webkit-scrollbar-track,
+.dark-mode .modal-body::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+.dark-mode .messages-container::-webkit-scrollbar-thumb,
+.dark-mode .modal-body::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+}
+
+.dark-mode .messages-container::-webkit-scrollbar-thumb:hover,
+.dark-mode .modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Dark mode toggle button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Export menu styles */
+.export-menu {
+  position: relative;
+}
+
+.export-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 180px;
+  overflow: hidden;
+  animation: dropdownSlide 0.2s ease-out;
+  z-index: 1000;
+}
+
+.export-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: left;
+}
+
+.export-option svg {
+  width: 18px;
+  height: 18px;
+}
+
+.export-option:hover {
+  background: var(--bg-primary);
+}
+
+.dark-mode .export-dropdown {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-mode .export-option:hover {
+  background: var(--bg-primary);
+}
