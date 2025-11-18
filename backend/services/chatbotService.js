@@ -200,4 +200,68 @@ export async function chatWithGroqMixtral(message, conversationHistory = []) {
   }
 }
 
+// Generate Summary of All Conversations
+export async function generateSummary(conversations) {
+  const GROQ_API_KEY = process.env.GROQ_API_KEY;
+
+  if (!GROQ_API_KEY) {
+    throw new Error('GROQ_API_KEY is not configured');
+  }
+
+  try {
+    // Format conversations for summary
+    let conversationText = '';
+
+    Object.entries(conversations).forEach(([botName, messages]) => {
+      conversationText += `\n\n=== ${botName.toUpperCase()} CONVERSATION ===\n`;
+      messages.forEach(msg => {
+        if (msg.role === 'user') {
+          conversationText += `User: ${msg.content}\n`;
+        } else if (msg.role === 'assistant') {
+          conversationText += `${botName}: ${msg.content}\n`;
+        }
+      });
+    });
+
+    const summaryPrompt = `Please provide a comprehensive summary of the following conversations from three different AI chatbots (Groq, Gemini, and Cohere).
+
+Analyze and summarize:
+1. The main topics discussed
+2. Key differences in how each bot responded
+3. Notable insights or unique perspectives from each bot
+4. Overall quality and helpfulness of responses
+
+Conversations:
+${conversationText}
+
+Please provide a well-structured summary with clear sections.`;
+
+    const messages = [
+      { role: 'system', content: 'You are an expert at analyzing and summarizing conversations. Provide clear, insightful summaries.' },
+      { role: 'user', content: summaryPrompt }
+    ];
+
+    const response = await axios.post(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        model: 'llama-3.3-70b-versatile',
+        messages: messages,
+        temperature: 0.5,
+        max_tokens: 2048
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${GROQ_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error('Summary Generation Error:', error.response?.data || error.message);
+    throw new Error('Failed to generate summary');
+  }
+}
+
 

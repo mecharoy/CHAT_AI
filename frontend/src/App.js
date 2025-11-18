@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import SummaryModal from './components/SummaryModal';
 import './App.css';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     gemini: [{ role: 'assistant', content: 'Hello! I\'m Gemini 2.5 Flash. Ready to chat!', timestamp: new Date().toISOString() }],
     cohere: [{ role: 'assistant', content: 'Hello! I\'m Cohere (Command R). Let\'s chat together!', timestamp: new Date().toISOString() }]
   });
+  const [summaryModal, setSummaryModal] = useState({ isOpen: false, summary: '', loading: false });
 
   const messagesEndRefs = {
     groq: useRef(null),
@@ -112,14 +114,56 @@ function App() {
     });
   };
 
+  const generateSummary = async () => {
+    // Check if there are meaningful conversations
+    const hasConversations = Object.values(conversations).some(
+      conv => conv.filter(msg => msg.role === 'user').length > 0
+    );
+
+    if (!hasConversations) {
+      setSummaryModal({ isOpen: true, summary: '', loading: false });
+      return;
+    }
+
+    setSummaryModal({ isOpen: true, summary: '', loading: true });
+
+    try {
+      const response = await axios.post('/api/chatbot/summary', {
+        conversations
+      });
+
+      setSummaryModal({
+        isOpen: true,
+        summary: response.data.summary,
+        loading: false
+      });
+    } catch (error) {
+      console.error('Error generating summary:', error);
+      setSummaryModal({
+        isOpen: true,
+        summary: `Error generating summary: ${error.response?.data?.error || error.message}`,
+        loading: false
+      });
+    }
+  };
+
+  const closeSummaryModal = () => {
+    setSummaryModal({ isOpen: false, summary: '', loading: false });
+  };
+
   return (
     <div className="App">
       <header className="app-header">
         <h1>AI Chatbot Comparison</h1>
         <p>Send one prompt to all 3 AI models and compare responses</p>
-        <button className="clear-all-button" onClick={clearAllChats}>
-          Clear All Chats
-        </button>
+        <div className="header-buttons">
+          <button className="summary-button" onClick={generateSummary}>
+            View Summary
+          </button>
+          <button className="clear-all-button" onClick={clearAllChats}>
+            Clear All Chats
+          </button>
+        </div>
       </header>
 
       <div className="chatbots-grid">
@@ -176,6 +220,13 @@ function App() {
           Send to All
         </button>
       </div>
+
+      <SummaryModal
+        isOpen={summaryModal.isOpen}
+        onClose={closeSummaryModal}
+        summary={summaryModal.summary}
+        loading={summaryModal.loading}
+      />
     </div>
   );
 }
