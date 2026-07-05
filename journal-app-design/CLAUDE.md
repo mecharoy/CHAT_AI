@@ -11,8 +11,11 @@ The full product spec is in `DESIGN.md` — read it before any feature work.
 
 - Tauri 2 (Rust core) + React 18 + TypeScript (strict) + Vite + Tailwind CSS
 - SQLite via tauri-plugin-sql; Recharts for charts
-- AI: provider abstraction in `src/ai/` — Anthropic API or OpenAI-compatible
-  local endpoint (Ollama/LM Studio). Never hardcode a provider outside it.
+- AI: provider abstraction in `src/ai/` — three providers: Claude
+  subscription (headless `claude` CLI subprocess), Anthropic API key, or
+  OpenAI-compatible local endpoint (Ollama/LM Studio). Never hardcode a
+  provider outside it. The subscription provider must only ever invoke the
+  CLI — never read, store, or forward its OAuth token.
 
 ## Commands
 
@@ -48,8 +51,8 @@ src-tauri/     Rust: tray, shortcuts, scheduler, window management
    one file per job (counselor, journal, extractor, review). They are product
    surface — change them only when asked, and keep DESIGN.md §5 as the source
    of truth for their contracts.
-5. **Provider-agnostic:** every AI feature must work on both providers.
-   If a feature relies on a cloud-only capability, stop and flag it.
+5. **Provider-agnostic:** every AI feature must work on all three providers.
+   If a feature relies on a capability one provider lacks, stop and flag it.
 6. **Dates:** store ISO 8601 local time; a "day" is the user's local calendar
    day. Session/entry uniqueness is per local date.
 
